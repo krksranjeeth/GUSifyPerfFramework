@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/krksranjeeth/GUSifyPerfFramework#readme",
   "dependencies": {
+    "express": "^4.16.4",
     "express.js": "^1.0.0"
   }
 }
