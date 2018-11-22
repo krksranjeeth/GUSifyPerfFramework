@@ -1,0 +1,22 @@
+{
+  "name": "gusifyperfframework",
+  "version": "1.0.0",
+  "description": "Integrate GUS with Perf Framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/krksranjeeth/GUSifyPerfFramework.git"
+  },
+  "author": "Ranjeeth Kathiresan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/krksranjeeth/GUSifyPerfFramework/issues"
+  },
+  "homepage": "https://github.com/krksranjeeth/GUSifyPerfFramework#readme",
+  "dependencies": {
+    "express.js": "^1.0.0"
+  }
+}
