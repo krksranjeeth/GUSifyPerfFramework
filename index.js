@@ -6,6 +6,8 @@ const sf = require("./src/utils/sf");
 
 const app = express();
 
+const path = require('path');
+
 app.set("views", "./views");
 
 app.enable('trust proxy');
@@ -13,7 +15,7 @@ app.enable('trust proxy');
 const bodyParser = require('body-parser');
 app.use(bodyParser.json());
 
-app.use(express.static(__dirname + '/src/public'));
+app.use(express.static(path.join(__dirname,'src/public')));
 
 const work = require("./src/routes/work.js");
 app.use("/work", work);
