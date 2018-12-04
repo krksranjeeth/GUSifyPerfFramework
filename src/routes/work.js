@@ -33,6 +33,7 @@ async function getSFId(sfFieldRef, objectValue, sfObjectName) {
 router.get("/", async (req, res) => {
     console.log("List the work items with open status");
     db.listOpenWork(result => {
+        console.log(req.query.format)
         if (req.query.format == undefined) {
             console.log("Format => HTML");
             res.render('../src/views/work.ejs',{result: result});
@@ -47,14 +48,18 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/:workId(W-[0-9]+)(:action(*))", async (req, res) => {
-    console.log(req.params.action);
-    console.log(req.params.workId);
     if(req.params.action == undefined || req.params.action == "" || req.params.action == "/" ) {
             db.getWorkDetails(req.params.workId, (result => {
             res.send(result);
         }));
     } else if (req.params.action == "/history") {
-        res.send("Give history details");
+        db.getWorkId(req.params.workId, result => {
+            if (req.query.format != undefined && req.query.format.toLowerCase() == 'json') {
+                res.send(JSON.stringify(result, undefined, '\t'));
+            } else {
+                res.send("UI list view for Work History")
+            }
+        })
     } else {
         res.statusCode = 404;
         res.send("Page Not found");

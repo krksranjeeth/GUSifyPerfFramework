@@ -100,7 +100,7 @@ module.exports = {
                 }
             })
             .catch(error => {
-                console.error("Error in getSFId -> ", error);
+                console.error("Error in listOpenWork -> ", error);
             });
     },
 
