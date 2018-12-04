@@ -5,7 +5,13 @@
 	.no-pointer {
 	  cursor: default;
 	}
-  </style>
+	.hidden{
+    display:none;
+	}
+	.unhidden{
+    display:default;
+	}
+</style>
   <header class="slds-global-header_container" style="z-index: 9000;">
 	<div class="slds-context-bar">
 	  <div class="slds-context-bar__primary slds-context-bar__item--divider-right">
@@ -59,6 +65,7 @@
 			</th>
 		  </tr>
 		</thead>
+		
 		<tbody>
 			<% var count = 1 %>
 			<% result.forEach(function(item){ %>
@@ -70,7 +77,14 @@
 				<a target="_blank" href=<%="https://na69.lightning.force.com/" + item.id.sf_value %>> <div class="slds-truncate"><%= item.id.db_value %></div> </a>
 				</td>
 				<td>
-						<div class="slds-truncate slds-align_absolute-center"> <a target="_blank"><img style="width:15px;height:15px;" src="assets/images/details.png"> </a>
+							<script> function htmlDecode(input){
+										var e = document.createElement('div');
+										e.innerHTML = input;
+										return e.childNodes.length === 0 ? "" : e.childNodes[0].nodeValue;
+									}
+									var obj = JSON.parse(htmlDecode("<%= JSON.stringify(item) %>")); 
+								</script>
+							<div class="slds-truncate slds-align_absolute-center"><img onclick="displayDetails(obj)" style="width:15px;height:15px;cursor:pointer;" src="assets/images/details.png"> 
 						</div>
 				</td>
 				 <td>
@@ -97,6 +111,43 @@
 		</tbody>
 	  </table>
 	</div>
-  </section>
+	</section>
+	
+	<section id="details" style="display:none">
+			<div class="details" style="height: 640px;">
+					<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+						<div class="slds-modal__container">
+							<header class="slds-modal__header">
+								<button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close">
+									<span class="slds-assistive-text">Close</span>
+								</button>
+								<h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Work Item</h2>
+							</header>
+							<div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+							</div>
+							<footer class="slds-modal__footer">
+								<button class="slds-button slds-button_neutral slds-align_absolute-center" onclick="undisplayDetails()">Done</button>
+							</footer>
+						</div>
+					</section>
+					<div class="slds-backdrop slds-backdrop_open"></div>
+				</div>
+	</section>
   
-  
+	<script>
+		// var prettyjson = require('prettyjson');
+
+		function displayDetails(data) {
+			// console.log(data)
+			document.getElementById('modal-content-id-1').innerHTML = "";
+
+			document.getElementById('details').style.display = "block";
+			// console.log(prettyjson.render(JSON.parse(data)))
+			// for (var i = 0; i < data.length; i++) {
+				document.getElementById('modal-content-id-1').innerHTML += JSON.stringify(data);
+			// }
+		};
+		function undisplayDetails() {
+    	document.getElementById('details').style.display = "none";
+		};
+	</script>
