@@ -8,17 +8,28 @@ MongoClient.connect(MONGODB_URI, { useNewUrlParser: true })
     .then(client => {
         const db = client.db();
 
-        collection_sf_record_mapping = db.collection("sf_record_mapping");
-        collection_sf_work = db.collection("sf_work");
+        collection_sf_record_mapping = db.collection(constants.SF_RECORD_MAPPING);
+        collection_sf_work = db.collection(constants.SF_WORK);
+        collection_sf_work_history = db.collection(constants.SF_WORK_HISTORY);
     })
     .catch(error => { console.error("Error in catch block", error) });
 
-function insertDocument(collection, data) {
+function insertDocument(collection, collectionName, data) {
     collection.insertOne(data, (err, res) => {
         if (err) {
             throw err;
         } else {
-            console.log("One document inserted in DB");
+            console.log("One document inserted in " + collectionName + " collection.");
+        }
+    });
+}
+
+function insertManyDocuments(collection, collectionName, data) {
+    collection.insertMany(data, (err, res) => {
+        if (err) {
+            throw err;
+        } else {
+            console.log("Successfully inserted " + res.insertedCount + " records in " + collectionName + " collection.");
         }
     });
 }
@@ -41,8 +52,19 @@ module.exports = {
                 console.error("Error in getSFId -> ", error);
             });
     },
-    
-    insertDocument: insertDocument,
+
+    captureWorkDataChanges: function captureWorkDataChanges(updateList) {
+        let bulk = collection_sf_work.initializeUnorderedBulkOp(),
+            totalRecords = Object.keys(updateList).length,
+            workIdField = [constants.ID.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
+
+        for (let i = 0; i < totalRecords; i++) {
+            let workIdValue = Object.keys(updateList[i]).pop();
+            bulk.find({ [workIdField]: workIdValue }).update({ $set: updateList[i][workIdValue] });
+
+        }
+        bulk.execute();
+    },
 
     listOpenWork: function listOpenWork(callback) {
 
@@ -57,14 +79,60 @@ module.exports = {
             createdDate = [constants.CREATED_DATE.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
             lastModifiedBy = [constants.LAST_MODIFIED_BY.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
             lastModifiedDate = [constants.LAST_MODIFIED_DATE.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
-        const query = { [statusField]: { "$in": constants.WORK_STATUS_OPEN_DB} };
+        const query = { [statusField]: { "$in": constants.WORK_STATUS_OPEN_DB } };
         const fields = {
             projection: {
                 _id: false, [idField]: true, [nameField]: true
-                , [subjectField]: true, [statusField]: true, [productTagField]: true
+                , [subjectField]: true, [statusField]: true
+                , [productTagField]: true
                 , [themeField]: true, [priorityField]: true
                 , [createdBy]: true, [createdDate]: true
                 , [lastModifiedBy]: true, [lastModifiedDate]: true
+            }
+        };
+
+        collection_sf_work.find(query, fields).toArray()
+            .then(result => {
+                if (result != undefined && result.length > 0) {
+                    callback(result);
+                } else {
+                    callback("");
+                }
+            })
+            .catch(error => {
+                console.error("Error in getSFId -> ", error);
+            });
+    },
+
+    getWorkDetails: function getWorkDetails(workName, callback) {
+
+        let nameField = [constants.ID.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
+        const query = { [nameField]: workName };
+        const fields = {
+            projection: {
+                _id: false
+            }
+        };
+
+        collection_sf_work.find(query, fields).toArray()
+            .then(result => {
+                if (result != undefined && result.length > 0) {
+                    callback(result);
+                } else {
+                    callback("");
+                }
+            })
+            .catch(error => {
+                console.error("Error in getWorkDetails -> ", error);
+            });
+    },
+    listOpenWorkWithAllFields: function listOpenWorkWithAllFields(callback) {
+
+        let statusField = [constants.STATUS.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
+        const query = { [statusField]: { "$in": constants.WORK_STATUS_OPEN_DB } };
+        const fields = {
+            projection: {
+                _id: false
             }
         };
 
@@ -83,10 +151,17 @@ module.exports = {
 };
 
 sfEventEmitter.on('storeSFMappingInDB', (eventArg) => {
-    insertDocument(collection_sf_record_mapping, eventArg);
+    insertDocument(collection_sf_record_mapping, constants.SF_RECORD_MAPPING, eventArg);
 });
 
 sfEventEmitter.on('storeSFWorkInDB', (eventArg) => {
-    insertDocument(collection_sf_work, eventArg);
+    insertDocument(collection_sf_work, constants.SF_WORK, eventArg);
 });
 
+sfEventEmitter.on('storeSFWorkHistoryInDB', (eventArg) => {
+    insertDocument(collection_sf_work_history, constants.SF_WORK_HISTORY, eventArg);
+});
+
+sfEventEmitter.on('storeManySFWorkHistoryInDB', (eventArg) => {
+    insertManyDocuments(collection_sf_work_history, constants.SF_WORK_HISTORY, eventArg);
+});
