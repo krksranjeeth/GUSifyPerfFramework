@@ -88,7 +88,7 @@
 								</div>
 						</td>
 						 <td>
-								<div class="slds-truncate slds-align_absolute-center"> <a target="_blank"><img style="width:15px;height:15px;" src="assets/images/history.png"> </a>
+								<div class="slds-truncate slds-align_absolute-center"><img onclick="displayHistory(eval('obj_'+ <%= count %>))" style="width:15px;height:15px;cursor:pointer;" src="assets/images/details.png"> 
 								</div>
 							</td>
 						<td>
@@ -136,18 +136,26 @@
 			
 			<script>
 				// var prettyjson = require('prettyjson');
-		
-				function displayDetails(data) {
-					console.log(data)
+
+				function displayHistory(data) {
 					document.getElementById('modal-heading-01').innerHTML = data.id.db_value;
 
 					document.getElementById('modal-content-id-1').innerHTML = "";
 		
 					document.getElementById('details').style.display = "block";
 					// console.log(prettyjson.render(JSON.parse(data)))
+					console.log(JSON.stringify(data, undefined, '\t'));
 					// for (var i = 0; i < data.length; i++) {
-						document.getElementById('modal-content-id-1').innerHTML += JSON.stringify(data);
+
+						document.getElementById('modal-content-id-1').innerHTML += "<pre>"+JSON.stringify(data, undefined, '\t')+"</pre>";
 					// }
+				};
+
+				function displayDetails(data) {
+					document.getElementById('modal-heading-01').innerHTML = data.id.db_value;
+					document.getElementById('modal-content-id-1').innerHTML = "";
+					document.getElementById('details').style.display = "block";
+					document.getElementById('modal-content-id-1').innerHTML += "<pre>"+JSON.stringify(data, undefined, '\t')+"</pre>";
 				};
 				function undisplayDetails() {
 					document.getElementById('details').style.display = "none";
