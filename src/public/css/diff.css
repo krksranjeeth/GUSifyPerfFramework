@@ -1,0 +1,176 @@
+/* Global */
+
+body {
+  font-family: "Salesforce Sans", Arial, sans-serif;
+}
+
+.improve {
+  color: #4CAF50;
+}
+
+.regress {
+  color: #F44336;
+}
+
+.center {
+  text-align: center;
+}
+
+.hidden {
+  display: none !important;
+}
+
+iframe {
+  border: none;
+  display: inline-block;
+  width: 100%;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.text-buttons {
+  border: none;
+  outline: none;
+  padding: 0;
+}
+
+/* Main */
+
+.run-details-wrapper {
+  overflow-x: auto;
+  padding: 0 1rem;
+}
+
+.run-details-titles {
+  display: inline-block;
+  padding-right: 1rem;
+  vertical-align: top;
+}
+
+.run-details {
+  display: inline-block;
+  max-width: 60%;
+  padding-right: 1rem;
+}
+
+#takeaway-ul {
+  text-align: right;
+  padding-top: 1em;
+  padding-bottom: 4em;
+}
+
+#takeaway-ul li {
+  margin: 5px 0;
+  position: relative;
+}
+
+#takeaway-ul iframe {
+  width: 90%; /* fallback if needed */
+  width: calc(100% - 110px);
+}
+
+.takeaway-banner {
+  padding: 1px 0;
+  display: inline-block;
+  text-align: right;
+  top: 0;
+}
+
+.takeaway-banner span {
+  color: #54698d;
+  padding: 0 5px;
+}
+
+.plugin-titles {
+  margin: 5px 0;
+}
+
+.frame-wrapper {
+  padding-top: 10px;
+  margin-bottom: 10px;
+  position: relative;
+}
+
+/* Plugin */
+
+.swap-buttons {
+  border: none;
+  margin: 0;
+  outline: none;
+  padding: 0;
+}
+
+.top-right {
+  position:absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Spinner */
+
+.loader,
+.loader:before,
+.loader:after {
+  border-radius: 50%;
+  height: 2.5em;
+  width: 2.5em;
+  -webkit-animation: load7 1.8s infinite ease-in-out;
+  animation: load7 1.8s infinite ease-in-out;
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+}
+
+.loader {
+  color: #555555;
+  font-size: 4px;
+  margin: 0 0 15px 20px;
+  position: relative;
+  text-indent: -9999em;
+  top: -5px;
+  -webkit-animation-delay: -0.16s;
+  animation-delay: -0.16s;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+.loader:before,
+.loader:after {
+  content: '';
+  position: absolute;
+  top: 0;
+}
+
+.loader:before {
+  left: -3.5em;
+  -webkit-animation-delay: -0.32s;
+  animation-delay: -0.32s;
+}
+
+.loader:after {
+  left: 3.5em;
+}
+
+@-webkit-keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}
+
+@keyframes load7 {
+  0%,
+  80%,
+  100% {
+    box-shadow: 0 2.5em 0 -1.3em;
+  }
+  40% {
+    box-shadow: 0 2.5em 0 0;
+  }
+}

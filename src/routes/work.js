@@ -4,6 +4,9 @@ const constants = require("../utils/constants");
 const express = require("express");
 const router = express.Router();
 
+let app = express();
+let ejs = require('ejs');
+
 async function getSFId(sfFieldRef, objectValue, sfObjectName) {
 
     return new Promise(function (resolve, reject) {
@@ -30,11 +33,19 @@ async function getSFId(sfFieldRef, objectValue, sfObjectName) {
 router.get("/", async (req, res) => {
     console.log("List the work items with open status");
     db.listOpenWork(result => {
-        if (req.query.format.toLowerCase() == "json") {
-            console.log("Format => JSON");
-            res.send(JSON.stringify(result, undefined, '\t'));
+        if (req.query.format == undefined) {
+            console.log("Format => HTML");
+            // res.sendFile(path.join(__dirname + '/views/index.html'));
+            // fs.readFile(__dirname + '/index.html', (err, html) => {
+            //     res.send(ejs.render(html, JSON.stringify(result)))
+            // })
+            res.render('../src/views/work.ejs',{result: result});
+            // fs.createReadStream('../src/views/work.html').pipe(res);
         } else {
-            res.send("UI list view for work");
+            if (req.query.format.toLowerCase() == "json") {
+                console.log("Format => JSON");
+                res.send(JSON.stringify(result, undefined, '\t'));
+            }
         }
     });
 
