@@ -351,13 +351,15 @@ module.exports = {
                     if (needUpdate) {
 
 
-                        dbRecord[constants.LAST_MODIFIED_BY.FIELD_REF][constants.DB_FIELD_NAME.DB_VALUE] = sfRecord[constants.LAST_MODIFIED_BY.FIELD_REF];
-                        dbRecord[constants.LAST_MODIFIED_BY.FIELD_REF][constants.DB_FIELD_NAME.SF_VALUE] = await getSFName(constants.USER.OBJECT_NAME
+                        dbRecord[constants.LAST_MODIFIED_BY.FIELD_REF][constants.DB_FIELD_NAME.SF_VALUE] = sfRecord[constants.LAST_MODIFIED_BY.FIELD_REF];
+                        dbRecord[constants.LAST_MODIFIED_BY.FIELD_REF][constants.DB_FIELD_NAME.DB_VALUE] = await getSFName(constants.USER.OBJECT_NAME
                             , sfRecord[constants.LAST_MODIFIED_BY.FIELD_REF]);
+
                         if (tempUpdateRecordsList != "") {
                             updateRecordsList = updateRecordsList + tempUpdateRecordsList;
                             tempUpdateRecordsList = ""
                         }
+                        
                         updateRecordsList = updateRecordsList + "\"" + [constants.LAST_MODIFIED_BY.FIELD_REF] + "\":" + JSON.stringify(dbRecord[constants.LAST_MODIFIED_BY.FIELD_REF]) + ",";
 
 
