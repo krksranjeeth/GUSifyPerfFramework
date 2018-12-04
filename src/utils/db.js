@@ -125,6 +125,42 @@ module.exports = {
             .catch(error => {
                 console.error("Error in getSFId -> ", error);
             });
+    },
+
+    getWorkId: function getWorkId(work_id, callback) {
+        let idField = [constants.ID.FIELD_REF] + "." + [constants.DB_FIELD_NAME.SF_VALUE],
+            nameField = [constants.ID.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            subjectField = [constants.SUBJECT.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            productTagField = [constants.PRODUCT_TAG.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            themeField = [constants.THEME.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            priorityField = [constants.PRIORITY.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            statusField = [constants.STATUS.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            createdBy = [constants.CREATED_BY.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            createdDate = [constants.CREATED_DATE.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            lastModifiedBy = [constants.LAST_MODIFIED_BY.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE],
+            lastModifiedDate = [constants.LAST_MODIFIED_DATE.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
+        const query = {[nameField]: work_id};
+        const fields = {
+            projection: {
+                _id: false, [idField]: true, [nameField]: true
+                , [subjectField]: true, [statusField]: true
+                , [productTagField]: true
+                , [themeField]: true, [priorityField]: true
+                , [createdBy]: true, [createdDate]: true
+                , [lastModifiedBy]: true, [lastModifiedDate]: true
+            }
+        };
+        collection_sf_work_history.find(query, fields).toArray()
+            .then(result => {
+                if (result != undefined && result.length > 0) {
+                    callback(result);
+                } else {
+                    callback("");
+                }
+            })
+            .catch(error => {
+                console.error("Error in getSFId -> ", error);
+            });
     }
 };
 

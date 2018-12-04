@@ -19,12 +19,17 @@ router.get("/", async (req, res) => {
 
 });
 
-router.get("/:workId(W-[0-9]*)(/:action(*))", async (req, res) => {
-    console.log(req.params.action);
+router.get("/:workId(W-[0-9]+)(:action(*))", async (req, res) => {
     if(req.params.action == undefined || req.params.action == "" ) {
         res.send("Give full details");
-    } else if (req.params.action == "history") {
-        res.send("Give history details");
+    } else if (req.params.action == "/history") {
+        db.getWorkId(req.params.workId, result => {
+            if (req.query.format != undefined && req.query.format.toLowerCase() == 'json') {
+                res.send(JSON.stringify(result, undefined, '\t'));
+            } else {
+                res.send("UI list view for Work History")
+            }
+        })
     } else {
         res.statusCode = 404;
         res.send("Page Not found");
@@ -32,6 +37,7 @@ router.get("/:workId(W-[0-9]*)(/:action(*))", async (req, res) => {
 
 // res.send("Received"+ req.params.workId + req.params.action);
 });
+
 router.post("/create", async (req, res) => {
 
     console.log("Creating work item in salesforce")
