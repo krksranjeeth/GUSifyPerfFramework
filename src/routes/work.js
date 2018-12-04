@@ -12,11 +12,26 @@ router.get("/", async (req, res) => {
             console.log("Format => JSON");
             res.send(JSON.stringify(result, undefined, '\t'));
         } else {
+
             res.send("UI list view for work");
         }
     });
 
+});
 
+router.get("/:workId(W-[0-9]+)(:action(*))", async (req, res) => {
+    console.log(req.params.action);
+    console.log(req.params.workId);
+    if(req.params.action == undefined || req.params.action == "" || req.params.action == "/" ) {
+            db.getWorkDetails(req.params.workId, (result => {
+            res.send(result);
+        }));
+    } else if (req.params.action == "/history") {
+        res.send("Give history details");
+    } else {
+        res.statusCode = 404;
+        res.send("Page Not found");
+    }
 });
 
 

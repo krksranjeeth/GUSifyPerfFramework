@@ -103,7 +103,29 @@ module.exports = {
                 console.error("Error in getSFId -> ", error);
             });
     },
-    
+
+    getWorkDetails: function getWorkDetails(workName, callback) {
+
+        let nameField = [constants.ID.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
+        const query = { [nameField]: workName };
+        const fields = {
+            projection: {
+                _id: false
+            }
+        };
+
+        collection_sf_work.find(query, fields).toArray()
+            .then(result => {
+                if (result != undefined && result.length > 0) {
+                    callback(result);
+                } else {
+                    callback("");
+                }
+            })
+            .catch(error => {
+                console.error("Error in getWorkDetails -> ", error);
+            });
+    },
     listOpenWorkWithAllFields: function listOpenWorkWithAllFields(callback) {
 
         let statusField = [constants.STATUS.FIELD_REF] + "." + [constants.DB_FIELD_NAME.DB_VALUE];
