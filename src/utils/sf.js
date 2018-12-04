@@ -44,7 +44,11 @@ function authenticate(callback) {
             if (!err) {
                 callback();
             }
-            if (err) console.log('Cannot connect to Salesforce: ' + err);
+            if (err) {
+                console.log('Cannot connect to Salesforce: ' + err);
+                console.log("Resetting the org cache ");
+                org = null;
+            }
         });
 }
 
