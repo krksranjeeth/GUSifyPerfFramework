@@ -41,7 +41,19 @@ router.get("/", async (req, res) => {
 
 });
 
+router.get("/:workId(W-[0-9]*)(/:action(*))", async (req, res) => {
+    console.log(req.params.action);
+    if(req.params.action == undefined || req.params.action == "" ) {
+        res.send("Give full details");
+    } else if (req.params.action == "history") {
+        res.send("Give history details");
+    } else {
+        res.statusCode = 404;
+        res.send("Page Not found");
+    }
 
+// res.send("Received"+ req.params.workId + req.params.action);
+});
 router.post("/create", async (req, res) => {
 
     console.log("Creating work item in salesforce")
