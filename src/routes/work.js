@@ -4,33 +4,11 @@ const constants = require("../utils/constants");
 const express = require("express");
 const router = express.Router();
 
-async function getSFId(sfFieldRef, objectValue, sfObjectName) {
-
-    return new Promise(function (resolve, reject) {
-        db.getSFId(sfFieldRef, objectValue, sfid => {
-            if (sfid == "") {
-                console.log(`Retrieving SF Id for ${sfObjectName} from Salesforce`)
-                sf.getSFId(sfObjectName, sfFieldRef, objectValue, sfid => {
-                    if (sfid != "") {
-                        const data = { [constants.DB_FIELD_NAME.SF_FIELD_REF]: sfFieldRef, [constants.DB_FIELD_NAME.OBJECT_VALUE]: objectValue, [constants.DB_FIELD_NAME.SF_ID]: sfid };
-                        sfEventEmitter.storeSFMappingInDB(data);
-                        resolve(sfid);
-                    } else {
-                        reject("Salesforce Id is not found in DB and Salesforce");
-                    }
-                });
-            } else {
-                console.log(`Retrieving SF Id for ${sfObjectName} from DB`)
-                resolve(sfid);
-            }
-        })
-    });
-}
 
 router.get("/", async (req, res) => {
     console.log("List the work items with open status");
     db.listOpenWork(result => {
-        if (req.query.format.toLowerCase() == "json") {
+        if (req.query.format!= undefined && req.query.format.toLowerCase() == "json") {
             console.log("Format => JSON");
             res.send(JSON.stringify(result, undefined, '\t'));
         } else {
@@ -82,15 +60,15 @@ router.post("/create", async (req, res) => {
 
     try {
         let [productTagId, scrumTeamId, impactId, frequencyId, themeId, foundInBuildId, scheduledBuildId, epicId, recordTypeId] = await Promise.all([
-            getSFId(constants.PRODUCT_TAG.FIELD_REF, productTagValue, constants.PRODUCT_TAG.OBJECT_NAME),
-            getSFId(constants.SCRUM_TEAM.FIELD_REF, scrumTeamValue, constants.SCRUM_TEAM.OBJECT_NAME),
-            getSFId(constants.IMPACT.FIELD_REF, impactValue, constants.IMPACT.OBJECT_NAME),
-            getSFId(constants.FREQUENCY.FIELD_REF, frequencyValue, constants.FREQUENCY.OBJECT_NAME),
-            getSFId(constants.THEME.FIELD_REF, themeValue, constants.THEME.OBJECT_NAME),
-            getSFId(constants.FOUND_IN_BUILD.FIELD_REF, foundInBuildValue, constants.FOUND_IN_BUILD.OBJECT_NAME),
-            getSFId(constants.SCHEDULED_BUILD.FIELD_REF, scheduledBuildValue, constants.SCHEDULED_BUILD.OBJECT_NAME),
-            getSFId(constants.EPIC.FIELD_REF, epicValue, constants.EPIC.OBJECT_NAME),
-            getSFId(constants.RECORD_TYPE.FIELD_REF, recordTypeValue, constants.RECORD_TYPE.OBJECT_NAME),
+            sf.getSFId(constants.PRODUCT_TAG.FIELD_REF, productTagValue, constants.PRODUCT_TAG.OBJECT_NAME),
+            sf.getSFId(constants.SCRUM_TEAM.FIELD_REF, scrumTeamValue, constants.SCRUM_TEAM.OBJECT_NAME),
+            sf.getSFId(constants.IMPACT.FIELD_REF, impactValue, constants.IMPACT.OBJECT_NAME),
+            sf.getSFId(constants.FREQUENCY.FIELD_REF, frequencyValue, constants.FREQUENCY.OBJECT_NAME),
+            sf.getSFId(constants.THEME.FIELD_REF, themeValue, constants.THEME.OBJECT_NAME),
+            sf.getSFId(constants.FOUND_IN_BUILD.FIELD_REF, foundInBuildValue, constants.FOUND_IN_BUILD.OBJECT_NAME),
+            sf.getSFId(constants.SCHEDULED_BUILD.FIELD_REF, scheduledBuildValue, constants.SCHEDULED_BUILD.OBJECT_NAME),
+            sf.getSFId(constants.EPIC.FIELD_REF, epicValue, constants.EPIC.OBJECT_NAME),
+            sf.getSFId(constants.RECORD_TYPE.FIELD_REF, recordTypeValue, constants.RECORD_TYPE.OBJECT_NAME),
         ]);
 
         let workData = {
@@ -118,9 +96,9 @@ router.post("/create", async (req, res) => {
             sf.createThemeRecord(constants.THEME_ASSIGNMENT.OBJECT_NAME, themeData, themeRecordId => {
                 console.log("Completed theme assignment for work id - " + workRecordId + "with theme id - " + themeRecordId);
             })
-            res.send("Created work item " + workName +
-                " [Salesforce ID - " + workRecordId +
-                "] ");
+            res.send("{ \"work_number\": \"" + workName +
+                "\", \"salesforce_id\": \"" + workRecordId +
+                "\" } ");
         });
 
     } catch (err) {
@@ -129,8 +107,8 @@ router.post("/create", async (req, res) => {
 });
 
 router.get("/refresh", async (req, res) => {
-    sf.refreshSFWorkData(result => {
-        res.send(JSON.stringify(result, undefined, '\t'));
+    sf.refreshSFWorkData(() => {
+        res.redirect('/work?format=json');
     });
 
 });
