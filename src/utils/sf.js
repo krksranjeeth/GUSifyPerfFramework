@@ -10,6 +10,8 @@ let creds = {
     password: process.env.PASSWORD
 };
 
+const hostname=process.env.HOSTNAME
+
 const SFEventEmitter = require("../emitter/sfevent.js");
 global.sfEventEmitter = new SFEventEmitter();
 const db = require("./db");
@@ -21,7 +23,7 @@ function createConnection() {
         org = nforce.createConnection({
             clientId: CONSUMER_KEY,
             clientSecret: CONSUMER_SECRET,
-            redirectUri: 'http://localhost:5000/oauth/_callback',
+            redirectUri: 'http://'+hostname+'/oauth/_callback',
             apiVersion: 'v44.0',
             mode: 'single'
         });
