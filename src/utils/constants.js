@@ -90,3 +90,8 @@ defineConstant("DEFAULT_VALUES", {
 });
 
 
+defineConstant("SF_RECORD_MAPPING","sf_record_mapping");
+defineConstant("SF_WORK","sf_work");
+defineConstant("SF_WORK_HISTORY","sf_work_history");
+
+
