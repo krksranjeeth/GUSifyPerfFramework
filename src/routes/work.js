@@ -30,7 +30,7 @@ async function getSFId(sfFieldRef, objectValue, sfObjectName) {
 router.get("/", async (req, res) => {
     console.log("List the work items with open status");
     db.listOpenWork(result => {
-        if (req.query.format.toLowerCase() == "json") {
+        if (req.query.format != undefined && req.query.format.toLowerCase() == "json") {
             console.log("Format => JSON");
             res.send(JSON.stringify(result, undefined, '\t'));
         } else {
