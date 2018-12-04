@@ -4,39 +4,63 @@ const constants = require("../utils/constants");
 const express = require("express");
 const router = express.Router();
 
+let app = express();
+let ejs = require('ejs');
+
+async function getSFId(sfFieldRef, objectValue, sfObjectName) {
+
+    return new Promise(function (resolve, reject) {
+        db.getSFId(sfFieldRef, objectValue, sfid => {
+            if (sfid == "") {
+                console.log(`Retrieving SF Id for ${sfObjectName} from Salesforce`)
+                sf.getSFId(sfObjectName, sfFieldRef, objectValue, sfid => {
+                    if (sfid != "") {
+                        const data = { [constants.DB_FIELD_NAME.SF_FIELD_REF]: sfFieldRef, [constants.DB_FIELD_NAME.OBJECT_VALUE]: objectValue, [constants.DB_FIELD_NAME.SF_ID]: sfid };
+                        sfEventEmitter.storeSFMappingInDB(data);
+                        resolve(sfid);
+                    } else {
+                        reject("Salesforce Id is not found in DB and Salesforce");
+                    }
+                });
+            } else {
+                console.log(`Retrieving SF Id for ${sfObjectName} from DB`)
+                resolve(sfid);
+            }
+        })
+    });
+}
 
 router.get("/", async (req, res) => {
     console.log("List the work items with open status");
     db.listOpenWork(result => {
-        if (req.query.format != undefined && req.query.format.toLowerCase() == "json") {
-            console.log("Format => JSON");
-            res.send(JSON.stringify(result, undefined, '\t'));
+        if (req.query.format == undefined) {
+            console.log("Format => HTML");
+            res.render('../src/views/work.ejs',{result: result});
         } else {
-
-            res.send("UI list view for work");
+            if (req.query.format.toLowerCase() == "json") {
+                console.log("Format => JSON");
+                res.send(JSON.stringify(result, undefined, '\t'));
+            }
         }
     });
 
 });
 
 router.get("/:workId(W-[0-9]+)(:action(*))", async (req, res) => {
+    console.log(req.params.action);
+    console.log(req.params.workId);
     if(req.params.action == undefined || req.params.action == "" || req.params.action == "/" ) {
             db.getWorkDetails(req.params.workId, (result => {
             res.send(result);
         }));
     } else if (req.params.action == "/history") {
-        db.getWorkId(req.params.workId, result => {
-            if (req.query.format != undefined && req.query.format.toLowerCase() == 'json') {
-                res.send(JSON.stringify(result, undefined, '\t'));
-            } else {
-                res.send("UI list view for Work History")
-            }
-        })
+        res.send("Give history details");
     } else {
         res.statusCode = 404;
         res.send("Page Not found");
     }
 });
+
 
 router.post("/create", async (req, res) => {
 

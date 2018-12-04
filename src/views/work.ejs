@@ -1,0 +1,102 @@
+<head>
+<link rel="stylesheet" type="text/css" href="assets/styles/salesforce-lightning-design-system.min.css">
+</head>
+<style>
+	.no-pointer {
+	  cursor: default;
+	}
+  </style>
+  <header class="slds-global-header_container" style="z-index: 9000;">
+	<div class="slds-context-bar">
+	  <div class="slds-context-bar__primary slds-context-bar__item--divider-right">
+		<div class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger--click slds-no-hover">
+		  <div class="slds-context-bar__icon-action">
+			<img style="width:30px;height:30px;" src="assets/images/logo-noname.svg">
+		</div>
+		  <span class="slds-context-bar__label-action">
+			<span class="slds-truncate">GUSify Perf Framework</span>
+		  </span>
+		</div>
+	  </div>
+	  </div>
+</header>
+
+<section id="workItems" class="workItemPanel slds-m-vertical--xx-large">
+	<div class="title">
+			<span class="slds-context-bar__label-action slds-m-top_medium slds-m-bottom_small">
+	  <h1>GUS Work Items</h1>
+	</div>
+	<div class="table-container">
+	  <table class="slds-table slds-table--bordered slds-table--cell-buffer slds-table--striped">
+		<thead>
+		  <tr class="slds-text-title--caps">
+			<th scope="col">
+			  <div class="slds-cell-shrink">#</div>
+			</th>
+			<th scope="col">
+			  <div class="slds-truncate" title="Work Item">Work Item</div>
+			</th>
+			<th scope="col">
+				<div class="slds-truncate slds-align_absolute-center" title="Details">Details</div>
+			</th>
+			<th scope="col">
+					<div class="slds-truncate slds-align_absolute-center" title="History">History</div>
+			</th>
+			<th scope="col">
+			  <div class="slds-truncate" title="Product Tag">Product Tag</div>
+			</th>
+			<th scope="col">
+					<div class="slds-truncate" title="Theme">Theme</div>
+				</th>
+			<th scope="col">
+			  <div class="slds-truncate" title="Subject">Subject</div>
+			</th>
+			<th scope="col">
+				<div class="slds-truncate" title="Priority">Priority</div>
+			</th>
+			<th scope="col">
+			  <div class="slds-truncate" title="Status">Status</div>
+			</th>
+		  </tr>
+		</thead>
+		<tbody>
+			<% var count = 1 %>
+			<% result.forEach(function(item){ %>
+			<tr>
+				<td scope="row">
+					<div class="slds-truncate"><%= count++ %></div>
+				</td>
+			  <td scope="row">
+				<a target="_blank" href=<%="https://na69.lightning.force.com/" + item.id.sf_value %>> <div class="slds-truncate"><%= item.id.db_value %></div> </a>
+				</td>
+				<td>
+						<div class="slds-truncate slds-align_absolute-center"> <a target="_blank"><img style="width:15px;height:15px;" src="assets/images/details.png"> </a>
+						</div>
+				</td>
+				 <td>
+						<div class="slds-truncate slds-align_absolute-center"> <a target="_blank"><img style="width:15px;height:15px;" src="assets/images/history.png"> </a>
+						</div>
+					</td>
+			  <td>
+				<div class="slds-truncate"><%= item.agf__Product_Tag__c.db_value %></div>
+				</td>
+				<td>
+					<div class="slds-truncate"><%= item.agf__Theme__c.db_value %></div>
+				</td>
+			  <td>
+				<div class="slds-truncate"><%= item.agf__Subject__c.db_value %></div>
+			  </td>
+			  <td>
+				<div class="slds-truncate"><%= item.agf__Priority__c.db_value %></div>
+			  </td>
+			  <td>
+				<div class="slds-truncate"><%= item.agf__Status__c.db_value %></div>
+			  </td>
+			</tr>
+		  <% }); %>
+		</tbody>
+	  </table>
+	</div>
+  </section>
+  
+  
