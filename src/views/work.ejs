@@ -67,7 +67,7 @@
 				</thead>
 				
 				<tbody>
-					<% if (result != undefined) { %>
+					<% if (result.length > 0) { %>
 					<% var count = 1; %>
 					<% result.forEach(function(item){ %>
 					<tr>
@@ -89,7 +89,7 @@
 								</div>
 						</td>
 						 <td>
-								<div class="slds-truncate slds-align_absolute-center"><img onclick="displayHistory(eval('obj_'+ <%= count %>))" style="width:15px;height:15px;cursor:pointer;" src="assets/images/details.png"> 
+								<div class="slds-truncate slds-align_absolute-center"><img onclick="displayHistory(eval('obj_'+ <%= count %>))" style="width:15px;height:15px;cursor:pointer;" src="assets/images/history.png"> 
 								</div>
 							</td>
 						<td>
