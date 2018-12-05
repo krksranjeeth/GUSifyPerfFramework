@@ -17,7 +17,7 @@
 				<div class="slds-context-bar__primary slds-context-bar__item--divider-right">
 				<div class="slds-context-bar__item slds-context-bar__dropdown-trigger slds-dropdown-trigger slds-dropdown-trigger--click slds-no-hover">
 					<div class="slds-context-bar__icon-action">
-					<img style="width:30px;height:30px;" src="assets/images/logo-noname.svg">
+					<img style="width:40px;height:30px;" src="assets/images/gpf.png">
 				</div>
 					<span class="slds-context-bar__label-action">
 					<span class="slds-truncate">GUSify Perf Framework</span>
@@ -67,6 +67,7 @@
 				</thead>
 				
 				<tbody>
+					<% if (result != undefined) { %>
 					<% var count = 1; %>
 					<% result.forEach(function(item){ %>
 					<tr>
@@ -108,6 +109,7 @@
 						</td>
 					</tr>
 					<% }); %>
+					<% } %>
 				</tbody>
 				</table>
 			</div>
